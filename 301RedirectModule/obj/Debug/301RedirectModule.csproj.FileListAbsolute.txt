@@ -1,0 +1,7 @@
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Sitecore.Kernel.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Sitecore.Logging.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Newtonsoft.Json.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\SharedSource.RedirectModule.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\SharedSource.RedirectModule.pdb
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\obj\Debug\SharedSource.RedirectModule.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\obj\Debug\SharedSource.RedirectModule.pdb
