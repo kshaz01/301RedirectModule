@@ -21,6 +21,12 @@ namespace SharedSource.RedirectModule
             public static string RedirectsWebIndex = "SharedSource.RedirectModule.Redirects.Web.Index";
             public static string SitecoreWebIndex = "SharedSource.RedirectModule.Sitecore.Web.Index";
 
+            public static string RedirectFolderTemplateID = "SharedSource.RedirectModule.Redirect.Folder.Template.ID";
+            public static string RedirectPatternTemplateID = "SharedSource.RedirectModule.Redirect.Pattern.Template.ID";
+            public static string RedirectStatusTemplateID = "SharedSource.RedirectModule.Redirect.Status.Template.ID";
+            public static string RedirectUrlTemplateID = "SharedSource.RedirectModule.Redirect.Url.Template.ID";
+            public static string ResponseStatusCodeTemplateID = "SharedSource.RedirectModule.Response.Status.Code.Template.ID";
+
         }
         public static class Templates
         {

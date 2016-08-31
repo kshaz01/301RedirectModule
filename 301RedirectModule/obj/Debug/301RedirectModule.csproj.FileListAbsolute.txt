@@ -21,3 +21,4 @@ C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Deb
 C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Sitecore.Marketing.Taxonomy.dll
 C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Stimulsoft.Base.dll
 C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\bin\Debug\Sitecore.Xdb.Configuration.dll
+C:\My Files\Temp\Sitecore-OpenSource\301RedirectModule\301RedirectModule\obj\Debug\301RedirectModule.csprojResolveAssemblyReference.cache

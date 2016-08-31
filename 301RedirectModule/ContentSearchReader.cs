@@ -24,7 +24,7 @@ namespace SharedSource.RedirectModule
             using (var indexSearchContext = ContentSearchManager.GetIndex(Sitecore.Configuration.Settings.GetSetting(Constants.Settings.RedirectsWebIndex)).CreateSearchContext())
             {
                 var output = indexSearchContext.GetQueryable<SearchResultItem>()
-                            .Where(x => x.TemplateId == ID.Parse(Constants.Templates.RedirectUrlTemplateID)
+                            .Where(x => x.TemplateId == ID.Parse(Sitecore.Configuration.Settings.GetSetting(Constants.Settings.RedirectUrlTemplateID))
                             && x.Language == language.Name);
 
                 return SearchContextHelper.IndexToItems(output.ToList());
@@ -41,7 +41,7 @@ namespace SharedSource.RedirectModule
            using (var indexSearchContext = ContentSearchManager.GetIndex(Sitecore.Configuration.Settings.GetSetting(Constants.Settings.RedirectsWebIndex)).CreateSearchContext())
            {
                var output = indexSearchContext.GetQueryable<SearchResultItem>()
-                           .Where(x => x.TemplateId == ID.Parse(Constants.Templates.RedirectPatternTemplateID)
+                           .Where(x => x.TemplateId == ID.Parse(Sitecore.Configuration.Settings.GetSetting(Constants.Settings.RedirectPatternTemplateID))
                            && x.Language == language.Name);
 
                return SearchContextHelper.IndexToItems(output.ToList());
