@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace SharedSource.RedirectModule
 {
@@ -17,6 +18,8 @@ namespace SharedSource.RedirectModule
             public static string QueryExactMatch = "SharedSource.RedirectModule.QueryType.ExactMatch";
             public static string QueryPatternMatch = "SharedSource.RedirectModule.QueryType.PatternMatch";
             public static string RedirectRootNode = "SharedSource.RedirectModule.RedirectRootNode";
+            public static string RedirectsWebIndex = "SharedSource.RedirectModule.Redirects.Web.Index";
+            public static string SitecoreWebIndex = "SharedSource.RedirectModule.Sitecore.Web.Index";
 
         }
         public static class Templates
@@ -27,7 +30,14 @@ namespace SharedSource.RedirectModule
             public static string VersionedRedirectPattern = "Versioned Redirect Pattern";
             public static string ResponseStatusCodeFolder = "Response Status Code Folder";
             public static string ResponseStatusCode = "Response Status Code";
+            public static readonly Guid RedirectFolderTemplateID = new Guid("{8BEF76F0-DEAA-4939-B9C1-F357E1875D5D}");
+            public static readonly Guid RedirectPatternTemplateID = new Guid("{94AC4F3A-E888-4557-9504-4AD2560ACC12}");
+            public static readonly Guid RedirectStatusTemplateID = new Guid("{F050D923-541E-4B50-BC43-5E1569F08A36}");
+            public static readonly Guid RedirectUrlTemplateID = new Guid("{B5967A68-7F70-42D3-9874-0E4D001DBC20}");
+            public static readonly Guid ResponseStatusCodeTemplateID = new Guid("{72E10D68-E414-45AD-824E-758B1711B763}");
+
         }
+
         public static class Fields
         {
             public static string RequestedUrl = "Requested Url";
