@@ -60,6 +60,8 @@
     <Compile Include="Redirects.cs" />
     <Compile Include="ResponseStatus.cs" />
     <Compile Include="SearchContextHelper.cs" />
+    <Compile Include="Utilities\CacheManager.cs" />
+    <Compile Include="Utilities\CacheService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

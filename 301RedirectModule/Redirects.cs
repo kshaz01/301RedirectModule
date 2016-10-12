@@ -10,6 +10,7 @@ using Sitecore.Links;
 using Sitecore.Pipelines.HttpRequest;
 using Sitecore.Diagnostics;
 using Sitecore.Resources.Media;
+using SharedSource.RedirectModule.Utilities;
 
 namespace SharedSource.RedirectModule
 {
@@ -34,9 +35,9 @@ namespace SharedSource.RedirectModule
                     try
                     {
                         // Loop through the exact match entries to look for a match.
-                        foreach (var possibleRedirect in ContentSearchReader.FindRedirectUrl(Context.Language))
+                        foreach (var possibleRedirect in GetRedirectUrls())
                         {
-                            //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: exact match: {0}", possibleRedirect.ID), this);
+                            //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: ID: {0}", possibleRedirect.ID), this);
                             //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: RequestedUrl: {0}", possibleRedirect[Constants.Fields.RequestedUrl]), this);
                             //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: RedirectTo: {0}", possibleRedirect[Constants.Fields.RedirectTo]), this);
 
@@ -190,6 +191,17 @@ namespace SharedSource.RedirectModule
                 return result;
             }
             
+        }
+
+        private List<Item> RedirectUrls()
+        {
+            return ContentSearchReader.FindRedirectUrl(Context.Language).ToList();
+        }
+
+        private List<Item> GetRedirectUrls()
+        {
+            var timeSpan = new TimeSpan(24, 0, 0, 0);  // cache will expire in  DateTime.Now + timeSpan
+            return new List<Item>(CacheManager<List<Item>>.GetValue("RedirectUrls", RedirectUrls, timeSpan));
         }
     }
 }
