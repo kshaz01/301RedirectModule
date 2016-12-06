@@ -11,6 +11,7 @@ using Sitecore.Pipelines.HttpRequest;
 using Sitecore.Diagnostics;
 using Sitecore.Resources.Media;
 using SharedSource.RedirectModule.Utilities;
+using Sitecore.Data.Fields;
 
 namespace SharedSource.RedirectModule
 {
@@ -29,13 +30,17 @@ namespace SharedSource.RedirectModule
                 var requestedPath = HttpContext.Current.Request.Url.AbsolutePath;
                 var requestedPathAndQuery = HttpContext.Current.Request.Url.PathAndQuery;
 
+                //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: requestedUrl: {0}", requestedUrl), this);
+
                 // First, we check for exact matches because those take priority over pattern matches.
                 if (Sitecore.Configuration.Settings.GetBoolSetting(Constants.Settings.RedirExactMatch, true))
                 {
+                    //Sitecore.Diagnostics.Log.Info("### RedirectUrl: RedirExactMatch", this);
+
                     try
                     {
                         // Loop through the exact match entries to look for a match.
-                        foreach (var possibleRedirect in GetRedirectUrls())
+                        foreach (var possibleRedirect in ContentSearchReader.FindRedirectUrl(Context.Language))
                         {
                             //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: ID: {0}", possibleRedirect.ID), this);
                             //Sitecore.Diagnostics.Log.Info(string.Format("### RedirectUrl: RequestedUrl: {0}", possibleRedirect[Constants.Fields.RequestedUrl]), this);
@@ -54,6 +59,7 @@ namespace SharedSource.RedirectModule
                                         Sitecore.Diagnostics.Log.Info(string.Format("### 301 Redirects from {0} to {1}", requestedUrl, redirectTo), this);
                                         var responseStatus = GetResponseStatus(possibleRedirect);
                                         SendResponse(redirectTo.Value, HttpContext.Current.Request.Url.Query, responseStatus, args);
+                                        break;
                                     }
                                 }
                             }
@@ -69,6 +75,7 @@ namespace SharedSource.RedirectModule
                 // Finally, we check for pattern matches because we didn't hit on an exact match.
                 if (Sitecore.Configuration.Settings.GetBoolSetting(Constants.Settings.RedirPatternMatch, true))
                 {
+                    //Sitecore.Diagnostics.Log.Info("### RedirectUrl: RedirPatternMatch", this);
                     try
                     {
                         // Loop through the pattern match items to find a match
@@ -106,14 +113,16 @@ namespace SharedSource.RedirectModule
                                 {
                                     path = MainUtil.DecodeName(path);
                                 }
-                                var redirectToItem = ContentSearchReader.FindItembyId(ID.Parse(redirectPath));
+                                var redirectToItem = ContentSearchReader.FindItembyId(ID.Parse(redirectPath), Context.Language);
                                 if (redirectToItem != null)
                                 {
                                     Sitecore.Diagnostics.Log.Info(string.Format("### 301 Redirects Found"), this);
-                                    Sitecore.Diagnostics.Log.Info(string.Format("### 301 Redirects from {0} to {1}", requestedUrl, redirectToItem), this);
+                                    Sitecore.Diagnostics.Log.Info(string.Format("### 301 Redirects from {0} to {1}", requestedUrl, redirectToItem.ID), this);
                                     var query = pathAndQuery.Length > 1 ? "?" + pathAndQuery[1] : "";
                                     var responseStatus = GetResponseStatus(possibleRedirectPattern);
+                                    //Sitecore.Diagnostics.Log.Info(string.Format("### 301 Redirects responseStatus : {0}", responseStatus.Status), this);
                                     SendResponse(redirectToItem, query, responseStatus, args);
+                                    break;
                                 }
                             }
                         }
@@ -167,30 +176,37 @@ namespace SharedSource.RedirectModule
 
             try
             {
+                //Sitecore.Diagnostics.Log.Error(string.Format("### SharedSource.RedirectModule : redirectItem {0}", redirectItem.ID), new object());
+
                 if (redirectItem != null)
                 {
-                    var responseStatusCodeId = redirectItem.Fields[Constants.Fields.ResponseStatusCode];
 
-                    if (responseStatusCodeId.HasValue && !string.IsNullOrEmpty(responseStatusCodeId.ToString()))
+                    var responseStatusCode = (LookupField)redirectItem.Fields[Constants.Fields.ResponseStatusCode];
+                    var responseStatusCodeItem = responseStatusCode.TargetItem;
+
+                    //Sitecore.Diagnostics.Log.Error(string.Format("### SharedSource.RedirectModule : responseStatusCodeItem {0}", responseStatusCodeItem.ID), new object());
+                    if (responseStatusCodeItem != null)
                     {
-                        var responseStatusCodeItem = redirectItem.Database.GetItem(ID.Parse(responseStatusCodeId));
-                        if (responseStatusCodeItem != null)
+                        var statusDescription = responseStatusCodeItem.Fields[Constants.Fields.StatusDescription].Value;
+                        var statusCode = responseStatusCodeItem.Fields[Constants.Fields.StatusCode].Value;
+                        //Sitecore.Diagnostics.Log.Error(string.Format("### SharedSource.RedirectModule : StatusCode {0}", statusCode), new object());
+                        return new ResponseStatus
                         {
-                            result.Status = responseStatusCodeItem.Fields[Constants.Fields.StatusDescription].Value;
-                            result.StatusCode = responseStatusCodeItem.GetIntegerFieldValue(Constants.Fields.StatusCode, result.StatusCode);
-                        }
+                            Status = !string.IsNullOrEmpty(statusDescription) ? statusDescription : result.Status,
+                            StatusCode = !string.IsNullOrEmpty(statusCode) ? int.Parse(statusCode) : result.StatusCode
+                        };
                     }
                 }
 
                 return result;
             }
-            catch( Exception ex)
+            catch (Exception ex)
             {
                 Sitecore.Diagnostics.Log.Error(string.Format("### SharedSource.RedirectModule GetResponseStatus {0}", ex), new object());
-                
+
                 return result;
             }
-            
+
         }
 
         private List<Item> RedirectUrls()
@@ -200,7 +216,7 @@ namespace SharedSource.RedirectModule
 
         private List<Item> GetRedirectUrls()
         {
-            var timeSpan = new TimeSpan(24, 0, 0, 0);  // cache will expire in  DateTime.Now + timeSpan
+            var timeSpan = new TimeSpan(0, 0, 0, 1);  // cache will expire in  DateTime.Now + timeSpan
             return new List<Item>(CacheManager<List<Item>>.GetValue("RedirectUrls", RedirectUrls, timeSpan));
         }
     }

@@ -54,12 +54,14 @@ namespace SharedSource.RedirectModule
        /// </summary>
        /// <param name="itemId">itemId</param>
        /// <returns>Item<Item></returns>
-       public static Item FindItembyId(ID itemId)
+       /// <param name="language">language</param> 
+       public static Item FindItembyId(ID itemId, Language language)
        {
            using (var indexSearchContext = ContentSearchManager.GetIndex(Sitecore.Configuration.Settings.GetSetting(Constants.Settings.SitecoreWebIndex)).CreateSearchContext())
            {
                var output = indexSearchContext.GetQueryable<SearchResultItem>()
-                           .Where(x => x.ItemId == itemId);
+                           .Where(x => x.ItemId == itemId
+                             && x.Language == language.Name);
 
                return SearchContextHelper.IndexToItems(output.ToList()).FirstOrDefault();
            }
